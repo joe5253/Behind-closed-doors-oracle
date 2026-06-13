@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a0030">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Behind Closed Doors">
+<title>Behind Closed Doors Oracle</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0d001f;
+    --bg2: #140028;
+    --purple-deep: #1a0035;
+    --purple-mid: #2d0057;
+    --purple-bright: #4a0080;
+    --magenta: #e600b3;
+    --magenta-glow: #ff00cc;
+    --magenta-soft: #c4006b;
+    --magenta-pale: #ff80df;
+    --white: #f0e6ff;
+    --white-dim: #c8b8e0;
+    --gold: #d4a800;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Jost', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── ACCESS SCREEN ── */
+  #access-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background: radial-gradient(ellipse at 50% 40%, #2d0057 0%, var(--bg) 70%);
+    text-align: center;
+  }
+
+  .lock-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 20px var(--magenta));
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { filter: drop-shadow(0 0 15px var(--magenta)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 35px var(--magenta-glow)); transform: scale(1.05); }
+  }
+
+  #access-screen h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    letter-spacing: 0.05em;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+
+  #access-screen .subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--magenta-pale);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .access-box {
+    background: rgba(45, 0, 87, 0.5);
+    border: 1px solid rgba(230, 0, 179, 0.3);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    max-width: 380px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+  }
+
+  .access-box label {
+    display: block;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--magenta-pale);
+    margin-bottom: 0.8rem;
+  }
+
+  .access-box input {
+    width: 100%;
+    background: rgba(13, 0, 31, 0.8);
+    border: 1px solid rgba(230, 0, 179, 0.4);
+    border-radius: 8px;
+    padding: 0.9rem 1.2rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    color: var(--white);
+    text-align: center;
+    text-transform: uppercase;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-bottom: 1.2rem;
+  }
+
+  .access-box input:focus {
+    border-color: var(--magenta);
+    box-shadow: 0 0 20px rgba(230, 0, 179, 0.25);
+  }
+
+  .btn-enter {
+    width: 100%;
+    background: linear-gradient(135deg, var(--magenta) 0%, var(--purple-bright) 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.9rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-enter:hover {
+    box-shadow: 0 0 25px rgba(230, 0, 179, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .error-msg {
+    color: #ff6b8a;
+    font-size: 0.8rem;
+    margin-top: 0.8rem;
+    display: none;
+  }
+
+  .access-footer {
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: rgba(200, 184, 224, 0.4);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── MAIN APP ── */
+  #app {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(180deg, var(--purple-deep) 0%, transparent 100%);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(230, 0, 179, 0.15);
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    letter-spacing: 0.06em;
+    color: var(--white);
+  }
+
+  header .deck-badge {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--magenta-pale);
+    text-transform: uppercase;
+    display: block;
+    font-weight: 300;
+  }
+
+  .card-counter {
+    font-size: 0.75rem;
+    color: var(--magenta-pale);
+    letter-spacing: 0.1em;
+    background: rgba(230, 0, 179, 0.1);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    border: 1px solid rgba(230, 0, 179, 0.2);
+  }
+
+  /* ── DECK VIEW ── */
+  #deck-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    gap: 2rem;
+  }
+
+  .deck-pile {
+    position: relative;
+    width: 200px;
+    height: 320px;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .deck-pile:hover { transform: scale(1.03); }
+
+  .deck-card {
+    position: absolute;
+    width: 200px;
+    height: 320px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #bb00a8 0%, #7700cc 60%, #3d007a 100%);
+    border: 2px solid rgba(230, 0, 179, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .deck-card:nth-child(1) { transform: rotate(-3deg) translate(-6px, 6px); opacity: 0.5; }
+  .deck-card:nth-child(2) { transform: rotate(-1.5deg) translate(-3px, 3px); opacity: 0.7; }
+  .deck-card:nth-child(3) { transform: rotate(0deg); box-shadow: 0 0 40px rgba(230, 0, 179, 0.4); }
+
+  .deck-keyhole {
+    font-size: 3.5rem;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+    opacity: 0.7;
+  }
+
+  .deck-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.8rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--magenta) 0%, var(--purple-bright) 100%);
+    color: var(--white);
+    box-shadow: 0 4px 20px rgba(230, 0, 179, 0.3);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 4px 30px rgba(230, 0, 179, 0.55);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: rgba(45, 0, 87, 0.6);
+    color: var(--magenta-pale);
+    border: 1px solid rgba(230, 0, 179, 0.35);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(75, 0, 130, 0.7);
+    border-color: var(--magenta);
+  }
+
+  .deck-hint {
+    font-size: 0.8rem;
+    color: var(--white-dim);
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+  }
+
+  /* ── DRAWN CARD ── */
+  #card-view {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 1.5rem 2rem;
+    gap: 1.5rem;
+  }
+
+  .card-scene {
+    perspective: 1000px;
+    width: min(320px, 85vw);
+    height: calc(min(320px, 85vw) * 1.6);
+  }
+
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+  }
+
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .card-face, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+  }
+
+  /* Card back (keyhole design) */
+  .card-back {
+    background: linear-gradient(145deg, #bb00a8 0%, #7700cc 60%, #3d007a 100%);
+    border: 2px solid rgba(230, 0, 179, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    box-shadow: 0 0 50px rgba(230, 0, 179, 0.4);
+  }
+
+  .card-back .keyhole-large {
+    font-size: 5rem;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+  }
+
+  .card-back .tap-hint {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* Card front (content) */
+  .card-face {
+    background: linear-gradient(160deg, #1e003d 0%, var(--bg) 100%);
+    border: 2px solid rgba(230, 0, 179, 0.5);
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1.2rem;
+    box-shadow: 0 0 50px rgba(230, 0, 179, 0.3), inset 0 0 40px rgba(230, 0, 179, 0.05);
+  }
+
+  .card-num {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--magenta-pale);
+    opacity: 0.7;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-category {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    opacity: 0.8;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+  }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    line-height: 1.2;
+    color: var(--white);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(230, 0, 179, 0.25);
+    padding-bottom: 0.8rem;
+  }
+
+  .card-section-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--magenta-pale);
+    opacity: 0.7;
+    margin-bottom: 0.25rem;
+    margin-top: 0.7rem;
+  }
+
+  .card-section-label:first-of-type { margin-top: 0; }
+
+  .card-raw-truth {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--white-dim);
+    font-style: italic;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .card-dynamics {
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--white-dim);
+    opacity: 0.85;
+  }
+
+  .card-prompt {
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--magenta-pale);
+    border-left: 2px solid var(--magenta);
+    padding-left: 0.75rem;
+    margin-top: 0.3rem;
+  }
+
+  .card-footer-brand {
+    margin-top: auto;
+    padding-top: 0.8rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(200, 184, 224, 0.25);
+    text-align: right;
+  }
+
+  /* ── CARD VIEW ACTIONS ── */
+  .card-view-actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-info-bar {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--white-dim);
+    opacity: 0.6;
+  }
+
+  /* ── ALL CARDS VIEW ── */
+  #all-cards-view {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  .search-bar {
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+    border-bottom: 1px solid rgba(230, 0, 179, 0.1);
+  }
+
+  .search-bar input {
+    width: 100%;
+    background: rgba(45, 0, 87, 0.5);
+    border: 1px solid rgba(230, 0, 179, 0.3);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    color: var(--white);
+    outline: none;
+  }
+
+  .search-bar input::placeholder { color: rgba(200, 184, 224, 0.3); }
+
+  .category-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .category-tabs::-webkit-scrollbar { display: none; }
+
+  .cat-tab {
+    white-space: nowrap;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    border: 1px solid rgba(230, 0, 179, 0.2);
+    color: var(--white-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    font-family: 'Jost', sans-serif;
+  }
+
+  .cat-tab.active, .cat-tab:hover {
+    background: rgba(230, 0, 179, 0.2);
+    border-color: var(--magenta);
+    color: var(--white);
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    padding: 1rem 1.5rem 2rem;
+    overflow-y: auto;
+  }
+
+  .mini-card {
+    background: rgba(29, 0, 52, 0.7);
+    border: 1px solid rgba(230, 0, 179, 0.2);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .mini-card:hover {
+    border-color: var(--magenta);
+    box-shadow: 0 0 20px rgba(230, 0, 179, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .mini-card-num {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--magenta);
+    margin-bottom: 0.3rem;
+  }
+
+  .mini-card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .mini-card-truth {
+    font-size: 0.75rem;
+    color: var(--white-dim);
+    opacity: 0.7;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ── NAV BAR ── */
+  nav {
+    display: flex;
+    background: rgba(13, 0, 31, 0.95);
+    border-top: 1px solid rgba(230, 0, 179, 0.15);
+    padding: 0.5rem 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Jost', sans-serif;
+  }
+
+  .nav-btn .nav-icon { font-size: 1.3rem; }
+
+  .nav-btn .nav-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(200, 184, 224, 0.4);
+  }
+
+  .nav-btn.active .nav-label, .nav-btn:hover .nav-label {
+    color: var(--magenta-pale);
+  }
+
+  .nav-btn.active .nav-icon { filter: drop-shadow(0 0 6px var(--magenta)); }
+
+  /* ── SHUFFLE ANIMATION ── */
+  @keyframes shuffle {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    20%  { transform: translate(-15px, -5px) rotate(-5deg); }
+    40%  { transform: translate(15px, -8px) rotate(5deg); }
+    60%  { transform: translate(-8px, 5px) rotate(-2deg); }
+    80%  { transform: translate(8px, 3px) rotate(3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  .shuffling .deck-card:nth-child(3) {
+    animation: shuffle 0.6s ease-in-out 3;
+  }
+
+  /* ── DRAW ANIMATION ── */
+  @keyframes drawCard {
+    0%   { transform: translateY(0) scale(1); opacity: 1; }
+    50%  { transform: translateY(-80px) scale(1.1); opacity: 0.8; }
+    100% { transform: translateY(0) scale(1); opacity: 0; }
+  }
+
+  .drawing .deck-pile { animation: drawCard 0.5s ease-in-out forwards; }
+
+  /* ── SPREAD VIEW ── */
+  #spread-view {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    overflow-y: auto;
+  }
+
+  .spread-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    text-align: center;
+  }
+
+  .spread-subtitle {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--magenta-pale);
+    opacity: 0.7;
+    text-align: center;
+    margin-top: -1rem;
+  }
+
+  .spread-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .spread-card-slot {
+    aspect-ratio: 0.625;
+    border-radius: 10px;
+    border: 1px solid rgba(230, 0, 179, 0.3);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+
+  .spread-card-slot.unrevealed {
+    background: linear-gradient(145deg, #bb00a8 0%, #7700cc 60%, #3d007a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spread-card-slot.unrevealed:hover {
+    box-shadow: 0 0 20px rgba(230, 0, 179, 0.5);
+    transform: translateY(-3px);
+  }
+
+  .spread-card-slot.revealed {
+    background: linear-gradient(160deg, #1e003d 0%, var(--bg) 100%);
+    border-color: rgba(230, 0, 179, 0.5);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .spread-slot-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin-bottom: 0.3rem;
+  }
+
+  .spread-slot-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.7rem;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+  }
+
+  .spread-slot-truth {
+    font-size: 0.6rem;
+    color: var(--white-dim);
+    opacity: 0.7;
+    line-height: 1.3;
+    flex: 1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+
+  .spread-keyhole { font-size: 1.8rem; opacity: 0.6; }
+
+  .spread-positions {
+    font-size: 0.72rem;
+    color: var(--white-dim);
+    opacity: 0.6;
+    text-align: center;
+    line-height: 2;
+  }
+</style>
+</head>
+<body>
+
+<!-- ACCESS SCREEN -->
+<div id="access-screen">
+  <div class="lock-icon">🗝️</div>
+  <h1>Behind Closed Doors</h1>
+  <p class="subtitle">Oracle · Shadow Work · Karmic Readings</p>
+
+  <div class="access-box">
+    <label for="code-input">Enter Your Access Code</label>
+    <p style="font-size:0.7rem;color:rgba(255,128,223,0.5);text-align:center;margin-bottom:0.5rem;letter-spacing:0.1em;">Type your code then click Unlock</p>
+    <input type="text" id="code-input" placeholder="" maxlength="20"
+      autocomplete="off" autocorrect="off" spellcheck="false"
+      style="ime-mode:disabled;">
+    <button class="btn-enter" onclick="checkCode()">Unlock the Oracle</button>
+    <div class="error-msg" id="error-msg">✗ Invalid access code. Try again.</div>
+  </div>
+
+  <p class="access-footer">PsychicSoulStar · Behind Closed Doors Oracle</p>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <header>
+    <div>
+      <span class="deck-badge">Shadow Work Oracle</span>
+      <h1>Behind Closed Doors</h1>
+    </div>
+    <span class="card-counter" id="counter">90 Cards</span>
+  </header>
+
+  <!-- DECK VIEW -->
+  <div id="deck-view">
+    <div class="deck-pile" id="deck-pile" onclick="drawCard()">
+      <div class="deck-card"></div>
+      <div class="deck-card"></div>
+      <div class="deck-card"><span class="deck-keyhole">🗝️</span></div>
+    </div>
+    <div class="deck-actions">
+      <button class="btn btn-primary" onclick="shuffleDeck()">✦ Shuffle</button>
+      <button class="btn btn-secondary" onclick="drawCard()">Draw a Card</button>
+    </div>
+    <p class="deck-hint">Tap the deck or press Draw to reveal a card</p>
+  </div>
+
+  <!-- DRAWN CARD VIEW -->
+  <div id="card-view">
+    <div class="card-scene">
+      <div class="card-inner" id="card-inner" onclick="flipCard()">
+        <div class="card-back">
+          <span class="keyhole-large">🗝️</span>
+          <span class="tap-hint">Tap to reveal</span>
+        </div>
+        <div class="card-face" id="card-face"></div>
+      </div>
+    </div>
+
+    <div class="card-info-bar">
+      <span id="drawn-count">Card drawn</span>
+      <span>·</span>
+      <span>Tap card to flip</span>
+    </div>
+
+    <div class="card-view-actions">
+      <button class="btn btn-primary" onclick="drawCard()">Draw Another</button>
+      <button class="btn btn-secondary" onclick="showDeck()">Back to Deck</button>
+    </div>
+  </div>
+
+  <!-- ALL CARDS VIEW -->
+  <div id="all-cards-view">
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search cards..."
+        oninput="filterCards()" autocomplete="off">
+    </div>
+    <div class="category-tabs" id="cat-tabs"></div>
+    <div class="cards-grid" id="cards-grid"></div>
+  </div>
+
+  <!-- 3-CARD SPREAD VIEW -->
+  <div id="spread-view">
+    <p class="spread-title">Three-Card Spread</p>
+    <p class="spread-subtitle">Past · Present · Future</p>
+    <div class="spread-grid" id="spread-grid"></div>
+    <p class="spread-positions">
+      1 · Past — The hidden root<br>
+      2 · Present — What's behind the door<br>
+      3 · Future — What you must face
+    </p>
+    <button class="btn btn-primary" onclick="newSpread()">New Spread</button>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav>
+    <button class="nav-btn active" id="nav-deck" onclick="switchView('deck')">
+      <span class="nav-icon">🃏</span>
+      <span class="nav-label">Draw</span>
+    </button>
+    <button class="nav-btn" id="nav-spread" onclick="switchView('spread')">
+      <span class="nav-icon">✦</span>
+      <span class="nav-label">Spread</span>
+    </button>
+    <button class="nav-btn" id="nav-all" onclick="switchView('all')">
+      <span class="nav-icon">🗂</span>
+      <span class="nav-label">All Cards</span>
+    </button>
+  </nav>
+</div>
+
+
+
+
+<script>
+
+// ── CARD DATA ──
+const CATEGORIES = [
+  "Taboo Love & Betrayal",
+  "Tech, Deception & Secrecy",
+  "Addictions & Secret Lifestyles",
+  "Mental Health, Trauma & Emotional Pain",
+  "Control, Power Dynamics & Toxic Bonds"
+];
+
+const CARDS = [
+  // Cat 1: Taboo Love & Betrayal (1-20)
+  {id:1, cat:0, name:"MARRIED", truth:"Commitment existed before you arrived — someone is already bound.", dynamics:"One or both parties hold a legal tie to someone else.", prompt:"Are you deceiving yourself that this temporary arrangement will become permanent?"},
+  {id:2, cat:0, name:"REGRETTING THE CHOICE", truth:"You chose — but deep inside, you want to rewind time.", dynamics:"Longing for an ex or wondering if you chose the wrong person.", prompt:"What does your current partner lack that makes you reach for the past?"},
+  {id:3, cat:0, name:"GOT THE SIDECHICK PREGNANT", truth:"A secret has grown too large to contain.", dynamics:"An unexpected pregnancy complicates an already hidden affair.", prompt:"When forced to choose between 'responsibility' and 'love' — who do you protect?"},
+  {id:4, cat:0, name:"ONLY IN IT FOR THE MONEY", truth:"Love doesn't pay the bills — but money and comfort can buy everything else.", dynamics:"Staying together for financial security, not genuine desire.", prompt:"If the money and power disappeared tomorrow, would you still want to be here?"},
+  {id:5, cat:0, name:"IN LOVE WITH TWO PEOPLE", truth:"This isn't romance — it's inability to choose.", dynamics:"Your heart is split between two people, and you're keeping both.", prompt:"Is the fear of being alone what's making you hoard people as options?"},
+  {id:6, cat:0, name:"COWORKER", truth:"The office isn't just for income — it's become a place for risky business.", dynamics:"A secret affair blooms at work, tangled with professional stakes.", prompt:"Do you truly desire them — or are you addicted to the thrill of almost being caught?"},
+  {id:7, cat:0, name:"ONLY HERE FOR THE KIDS", truth:"The house is a stage where you play parent, not partner.", dynamics:"Love faded long ago; staying for the children or the image.", prompt:"Does staying in a loveless home truly serve the children — or is it just your excuse not to start over?"},
+  {id:8, cat:0, name:"SLEEPING THEIR WAY TO THE TOP", truth:"Using your body as a ladder, trading intimacy for advancement.", dynamics:"Sex or charm exchanged for position, rank, or money.", prompt:"Are you diminishing your actual abilities to chase a shortcut?"},
+  {id:9, cat:0, name:"CLOSE FRIEND", truth:"Your most dangerous enemy is the one who knows you best.", dynamics:"Betrayal emerges from within your inner circle.", prompt:"Were you ignoring the red flags because you trusted the label 'friend' too blindly?"},
+  {id:10, cat:0, name:"OPEN RELATIONSHIP", truth:"A polished excuse for infidelity with a contractual veneer.", dynamics:"One party pushed for opening the relationship to satisfy desire.", prompt:"Is this truly mutual fulfillment — or did you agree because you feared losing them?"},
+  {id:11, cat:0, name:"KARMIC RELATIONSHIP", truth:"Looping through familiar hell, addicted to the very pain.", dynamics:"A toxic push-pull cycle — explosive fights followed by magnetic reunions.", prompt:"What old wound makes you believe that suffering equals real love?"},
+  {id:12, cat:0, name:"REBOUND RELATIONSHIP", truth:"You are being used as painkillers — not a permanent cure.", dynamics:"Dating immediately after a breakup to numb loneliness or provoke an ex.", prompt:"Are you using this new person as emotional medicine without considering their feelings?"},
+  {id:13, cat:0, name:"SECRET SECOND FAMILY", truth:"Two solid foundations built in silence and shadow.", dynamics:"A hidden family, home, or children concealed from the first.", prompt:"How vast is your greed if you believe you can carry two full lives simultaneously?"},
+  {id:14, cat:0, name:"WEDDING RING HIDDEN", truth:"Pocketing the ring to play the role of single.", dynamics:"Deliberately hiding marital status when someone new catches your eye.", prompt:"Is a fleeting thrill worth the total destruction of a lifetime of built trust?"},
+  {id:15, cat:0, name:"COMPARING YOU TO THE EX", truth:"You are just a shadow of someone they can never reclaim.", dynamics:"Constantly compared in behavior, looks, or personality to a past lover.", prompt:"You're erasing your own worth to mirror someone else — is it truly worth it?"},
+  {id:16, cat:0, name:"FORBIDDEN ATTRACTION", truth:"The more it's forbidden, the more magnetic it feels.", dynamics:"Desire for someone you absolutely should not pursue.", prompt:"Are you addicted to love — or to the adrenaline rush of breaking the rules?"},
+  {id:17, cat:0, name:"PROMISE RING LIES", truth:"Promises spoken to buy time, not to build a future.", dynamics:"Vows of commitment made with no intention of follow-through.", prompt:"How many more months will you let empty words hold you hostage in a waiting room?"},
+  {id:18, cat:0, name:"STILL LYING IN THEIR BED", truth:"Lips say it's over — the body never got the memo.", dynamics:"Broken up, yet physically still behaving as a couple.", prompt:"Is your physical entanglement blocking the door to a healthier new beginning?"},
+  {id:19, cat:0, name:"EMOTIONAL AFFAIR", truth:"The body is here — but the mind and soul left for someone else.", dynamics:"Deep emotional intimacy formed with another, without physical contact.", prompt:"Emotional infidelity sometimes cuts deeper than physical betrayal. You already know this, don't you?"},
+  {id:20, cat:0, name:"UNPLANNED PREGNANCY", truth:"It arrived at the wrong time, turning a situation into a crisis.", dynamics:"A pregnancy emerging when the relationship was already fragile or complicated.", prompt:"This has come to force you to stop running from the truth and make a definitive choice."},
+
+  // Cat 2: Tech, Deception & Secrecy (21-40)
+  {id:21, cat:1, name:"FAKE SOCIAL MEDIA ACCOUNT", truth:"An avatar-self built from paranoia and hidden intent.", dynamics:"Creating fake profiles to spy, message covertly, or catch someone out.", prompt:"What makes you unable to confront reality — forcing you to hide behind a false identity?"},
+  {id:22, cat:1, name:"HIDDEN TEXTS", truth:"Deleting chats is the real skill here. Secrets live in the inbox.", dynamics:"Covert conversations with message history routinely erased.", prompt:"Can a relationship built on daily evidence-deleting ever be called happiness?"},
+  {id:23, cat:1, name:"CATFISH", truth:"Love built on illusions and lies from the very first message.", dynamics:"The other person fabricated their profile, appearance, or lifestyle online.", prompt:"Are you in love with who they actually are — or with the character they invented to hook you?"},
+  {id:24, cat:1, name:"STALKING", truth:"Tracking every digital breath with obsessive fixation.", dynamics:"Monitoring their screen time, follower count, and social activity around the clock.", prompt:"Is this paranoia protecting you from pain — or actively torturing you?"},
+  {id:25, cat:1, name:"SECRET MEETUPS", truth:"Dark corners in out-of-town cafés — places where no one knows your name.", dynamics:"Clandestine meetings in distant locations, carefully avoiding familiar faces.", prompt:"Hiding like you've committed a crime — does that truly satisfy your deepest needs?"},
+  {id:26, cat:1, name:"INTERCEPTED MESSAGES", truth:"Secrets have no safe harbor in the digital world.", dynamics:"Someone saw the texts, emails, or private images — and the truth is now exposed.", prompt:"How will you handle the fallout when the mask you spent so long building finally slips?"},
+  {id:27, cat:1, name:"SECRET PHONE", truth:"A second phone for a second life.", dynamics:"A hidden device kept locked, used exclusively to contact a secret person.", prompt:"What emptiness inside you requires your life to be split into two separate worlds?"},
+  {id:28, cat:1, name:"LOOKING FOR EVIDENCE", truth:"Playing detective because trust collapsed long ago.", dynamics:"Rummaging through bags, checking phones — a frantic search for proof of cheating.", prompt:"If you need this much evidence just to justify leaving — why not simply leave right now?"},
+  {id:29, cat:1, name:"BLOCKING AND UNBLOCKING", truth:"The block button becomes a weapon in a war of unresolved feelings.", dynamics:"Blocking during arguments, unblocking to monitor behavior — on repeat.", prompt:"Is blocking truly setting a boundary — or just an elaborate cry for attention?"},
+  {id:30, cat:1, name:"REPLAYING OLD VOICEMAILS", truth:"Sitting in a graveyard of past messages.", dynamics:"Replaying old voice notes, re-reading old chats where they once swore they loved you.", prompt:"Are you living inside a dead past so intently that you're missing the truth of right now?"},
+  {id:31, cat:1, name:"DELETING THE EVIDENCE", truth:"Washing your hands in gold — clearing everything before getting caught.", dynamics:"Frantically erasing photos, messages, or bank transfers the moment suspicion rises.", prompt:"You can delete the messages from your phone. Can you delete the guilt from your conscience?"},
+  {id:32, cat:1, name:"SPYING APPS INSTALLED", truth:"A relationship that has become a prison.", dynamics:"Covertly installing tracking or monitoring apps on a partner's device.", prompt:"When love transforms into surveillance and control, what remains of trust?"},
+  {id:33, cat:1, name:"TRACKING YOUR LOCATION", truth:"A green GPS dot used as a digital leash.", dynamics:"Being forced to share location at all times, or a secret GPS planted in the car.", prompt:"Are you truly surrendering your basic freedom just to maintain their false sense of security?"},
+  {id:34, cat:1, name:"LIKING AN EX'S PHOTOS", truth:"The 2 AM like — the timestamp that sets off a time bomb.", dynamics:"Secretly liking a former partner's photos, showing signs of rekindled interest.", prompt:"Did you do it to test your current partner's reaction — or has your heart never truly moved on?"},
+  {id:35, cat:1, name:"LIES BY OMISSION", truth:"Not lying — just choosing not to tell the whole truth.", dynamics:"Speaking only half the truth, concealing critical details to avoid looking bad.", prompt:"Telling only part of the truth carries the same weight as a deliberate lie. Can you accept that?"},
+  {id:36, cat:1, name:"PRIVATE BROWSER HISTORY", truth:"Incognito mode: the private vault of dark secrets.", dynamics:"Clearing browser history to hide searches, sites, or specific interests.", prompt:"What you seek in secret mode — how does it mirror the shadow you cannot control?"},
+  {id:37, cat:1, name:"SCREENSHOTTING THE CHAT", truth:"Capturing screenshots — stockpiling future weapons.", dynamics:"Saving confessions, intimate images, or damaging texts for future leverage.", prompt:"Does a relationship where both sides secretly collect ammunition count as a safe space?"},
+  {id:38, cat:1, name:"ARCHIVED AND HIDDEN", truth:"Not deleted — just buried somewhere they'll never look.", dynamics:"Hiding someone's chat in the archive folder to keep a partner blind.", prompt:"Are you trying to keep this double-sided situation alive until the inevitable explosion?"},
+  {id:39, cat:1, name:"CHANGING PASSWORDS", truth:"A sudden password change — the wall going up to guard a secret.", dynamics:"Changing phone or social media passwords to prevent a partner's access.", prompt:"Was this lock born from a need for genuine privacy — or from the fear of getting caught?"},
+  {id:40, cat:1, name:"ONLINE FLIRTING", truth:"'Just flirting to kill boredom' — the classic cheater's excuse.", dynamics:"Quietly sending hearts and flirty messages to others online, claiming it means nothing.", prompt:"Where, exactly, does your boundary between 'being friendly' and 'intentional betrayal' sit?"},
+
+  // Cat 3: Addictions & Secret Lifestyles (41-55)
+  {id:41, cat:2, name:"ALCOHOL", truth:"Using intoxication to erase reality and numb what can't be fixed.", dynamics:"Alcohol used to escape truth; explosive arguments fueled by drinking.", prompt:"Are you using alcohol to sidestep relationship problems you don't have the courage to confront?"},
+  {id:42, cat:2, name:"PAIN KILLERS", truth:"Addicted to medication to silence the screaming inside your head.", dynamics:"Dependency on painkillers or sleep aids to suppress emotional suffering.", prompt:"Pills can mute physical pain — but have your real emotional wounds received any actual healing?"},
+  {id:43, cat:2, name:"COCAINE", truth:"Temporary chemical euphoria traded for a life in ruins.", dynamics:"Entanglement with hard substances — volatile mood swings, financial hemorrhaging.", prompt:"Why are you trying to fill a spiritual void with something that's actively destroying your life?"},
+  {id:44, cat:2, name:"BISEXUAL", truth:"A truth reflected in the mirror that you haven't yet told the person sharing your bed.", dynamics:"Concealing true sexual orientation, performing societal expectations.", prompt:"Are you more afraid of others' rejection than of spending your whole life behind this mask?"},
+  {id:45, cat:2, name:"STD", truth:"Physical evidence etched into the body — proof of what happened behind closed doors.", dynamics:"A sexually transmitted infection contracted or concealed from a partner.", prompt:"Your body is sending a clear signal: your secret behaviors are harming both yourself and the one you claim to love."},
+  {id:46, cat:2, name:"GAMBLING ADDICTION", truth:"Betting the family's future until there's nothing left.", dynamics:"Secretly channeling savings or emergency funds into online gambling — drowning in debt.", prompt:"Are you addicted to the rush of winning — or running from the truth that you can't build stability honestly?"},
+  {id:47, cat:2, name:"PORN ADDICTION", truth:"Hypnotized by images on a screen while overlooking the living person beside you.", dynamics:"Severe pornography consumption rendering real intimacy numb or unfeeling.", prompt:"Have you chosen the controlled fantasy of a screen over the vulnerability of a real relationship?"},
+  {id:48, cat:2, name:"DOUBLE LIFE", truth:"Respectable suit by day. Someone else entirely by night.", dynamics:"Living two completely separate existences — saint in public, shadow in private.", prompt:"Which version is the real you — and aren't you exhausted from toggling between them?"},
+  {id:49, cat:2, name:"SECRET ADULT WORK", truth:"Grey-area work done for money — paid for with your deepest secret.", dynamics:"Doing adult or image-based work that can never be disclosed to a partner or family.", prompt:"Are you using this work to prove your power and desirability — or is it purely financial necessity?"},
+  {id:50, cat:2, name:"SHOPPING TO FILL THE VOID", truth:"Buying everything in sight to patch the hollow in your heart.", dynamics:"Retail therapy taken to extremes — maxed credit cards, hidden debt.", prompt:"Can designer goods and delivered packages ever replace the love and warmth you are missing?"},
+  {id:51, cat:2, name:"ESCAPING TO THE NIGHT", truth:"Nightlife is the escape hatch from a suffocating home.", dynamics:"Manufacturing reasons to leave the house late — using nightlife to avoid a partner.", prompt:"If home is not where you feel most at ease — what is the next step you need to take?"},
+  {id:52, cat:2, name:"FINANCIAL DECEPTION", truth:"Numbers in the accounts that lie — a financial time bomb.", dynamics:"Hiding large debts, lying about income, or secretly redirecting a partner's money.", prompt:"How can a relationship that begins with financial dishonesty ever build genuine security?"},
+  {id:53, cat:2, name:"SECRET BANK ACCOUNT", truth:"A hidden account — a pre-planned escape route.", dynamics:"Secretly opening a separate bank account, quietly moving money in preparation for leaving.", prompt:"The fact that you're already planning your exit route — deep down, don't you know this is already over?"},
+  {id:54, cat:2, name:"SEXLESS MARRIAGE", truth:"Bodies sharing a lease agreement. Desire checked out long ago.", dynamics:"Prolonged absence of physical intimacy — a cold distance spreading through the home.", prompt:"What are you staying for — and how much longer can you sustain this emotional drought?"},
+  {id:55, cat:2, name:"COMPULSIVE LYING", truth:"Lying so habitually that even your own brain can't remember the truth.", dynamics:"Fabricating stories on reflex — from small details to life-altering facts.", prompt:"You've made dishonesty your default armor. Is there anyone left in your world you can still be genuinely truthful with?"},
+
+  // Cat 4: Mental Health, Trauma & Emotional Pain (56-70)
+  {id:56, cat:3, name:"PTSD", truth:"The past is over — but the hell inside your mind keeps replaying on a loop.", dynamics:"Old relationship wounds haunting the present, projecting onto a blameless current partner.", prompt:"Are you punishing your present partner for crimes only your past person committed?"},
+  {id:57, cat:3, name:"INTIMACY STRUGGLES", truth:"Craving closeness — but pushing people away the moment they get near.", dynamics:"Fear of attachment; shutting down emotionally to avoid the risk of abandonment.", prompt:"Are you so terrified of rejection that you're destroying good relationships with your own hands?"},
+  {id:58, cat:3, name:"SELF INFLICTED PAIN", truth:"Cutting the body to silence the crying happening inside.", dynamics:"Self-harm used as punishment or as a pressure valve for overwhelming stress.", prompt:"Physical pain cannot wash away guilt. Are you ready to face — and embrace — the wound that truly needs healing?"},
+  {id:59, cat:3, name:"I SAY 'I'M GOOD' BUT I'M NOT", truth:"The cruelest lie is the one you tell yourself.", dynamics:"Smiling on the outside while completely shattered within — invisible to everyone.", prompt:"How long will you carry this collapse alone just to protect the image of 'being strong'?"},
+  {id:60, cat:3, name:"CRYING OVER YOU", truth:"Silent tears falling in the dark after they've rolled over and gone to sleep.", dynamics:"Accumulating pain from a partner's words, actions, or cold indifference.", prompt:"How many tears must fall before you see clearly that this person is not worth your suffering?"},
+  {id:61, cat:3, name:"HOMELESS", truth:"A roof. A bed. Someone sleeping beside you. And yet — completely alone.", dynamics:"Feeling invisible, rootless, and disconnected inside your own home.", prompt:"The loneliness of being with someone who does not love you is far more painful than being alone."},
+  {id:62, cat:3, name:"EMOTIONAL BANKRUPTCY", truth:"The emotional fuel gauge reads zero. Nothing left to give.", dynamics:"Total burnout in the relationship — going through the motions like an empty shell.", prompt:"Forcing a dead relationship to keep breathing is consuming the very energy you need to begin again."},
+  {id:63, cat:3, name:"CRYING IN THE SHOWER", truth:"Running the tap loud enough to drown out the sound of your own sobbing.", dynamics:"Hiding behind closed bathroom doors to cry — concealing your vulnerability from your partner.", prompt:"Why can't you be yourself — or show your pain — to the person who is supposed to be your life partner?"},
+  {id:64, cat:3, name:"UNRESOLVED CHILDHOOD TRAUMA", truth:"A wounded child from the past is secretly running your present relationship.", dynamics:"Childhood neglect or witnessing parental conflict creating toxic patterns today.", prompt:"Are you using your partner as an emotional surrogate to compensate for what your parents never gave you?"},
+  {id:65, cat:3, name:"WEARING A HAPPY MASK", truth:"Tens of thousands of likes online. Zero happiness inside.", dynamics:"Performing a perfect, loving relationship for social media while the reality is hollow.", prompt:"Do you care more about the external validation of strangers than your own genuine inner peace?"},
+  {id:66, cat:3, name:"PANIC ATTACKS IN BED", truth:"Anxiety yanking you awake at 3 AM — heart pounding with dread.", dynamics:"Insomnia, chest tightness, hypervigilance about a partner's potential betrayal.", prompt:"Your body and subconscious are screaming at you: this situation is no longer safe for you."},
+  {id:67, cat:3, name:"DEPRESSION SINKING DEEPER", truth:"Brain chemistry and a toxic environment are pulling you under.", dynamics:"Depression flaring to the point of complete paralysis — a partner losing patience.", prompt:"Right now, do you need a 'lover' — or do you need a professional to help you heal? Know the difference."},
+  {id:68, cat:3, name:"GUILT TRAPPED IN MIND", truth:"The tightest prison is the one built from your own guilt.", dynamics:"Drowning in shame over past mistakes — unable to allow yourself any happiness.", prompt:"Are you permitting someone to degrade you as self-imposed penance for what you once did wrong?"},
+  {id:69, cat:3, name:"NUMB TO THE PAIN", truth:"Not healed — just felt so much that the nerves finally gave out.", dynamics:"Complete emotional flatness — neither joy nor sadness, just robotic detachment.", prompt:"When feeling itself is shut down, the relationship becomes nothing but an empty, hollow shell."},
+  {id:70, cat:3, name:"MOLESTED / UNHEALED ABUSE", truth:"A past demon that was never properly exorcised.", dynamics:"Sexual or physical abuse from the past creating profound fear of intimacy or touch.", prompt:"You must accept: what happened was not your fault. You need time and proper healing — not suppression."},
+
+  // Cat 5: Control, Power Dynamics & Toxic Bonds (71-90)
+  {id:71, cat:4, name:"BLACKMAIL", truth:"Love weaponized by secrets or leaked footage used as a chain.", dynamics:"Threats made using images, clips, or secrets to prevent someone from leaving.", prompt:"Someone who truly loves you will never use weapons to destroy your life. This is not love — it is a crime."},
+  {id:72, cat:4, name:"PLANNING TO LEAVE", truth:"Quietly packing bags in your mind — waiting for the right moment to walk.", dynamics:"Secretly saving money, job-hunting, quietly planning an exit from a toxic situation.", prompt:"What is the very last thing you are still waiting for before you permanently walk out that door?"},
+  {id:73, cat:4, name:"RACIST FAMILY", truth:"A love between two people — shattered by the prejudice of a bloodline.", dynamics:"Family members rejecting or undermining the relationship based on race, class, or religion.", prompt:"How far will you let another family's outdated values dictate the happiness of your own life?"},
+  {id:74, cat:4, name:"PHYSICAL ABUSE", truth:"Bruises hidden beneath clothing that a hundred apologies cannot erase.", dynamics:"Physical violence taking place behind closed doors.", prompt:"Are you telling yourself 'he lashed out because he loves me and gets jealous' — just to survive another day?"},
+  {id:75, cat:4, name:"EMOTIONAL MANIPULATION", truth:"Your mind has been colonized — running on a script he wrote.", dynamics:"Expert gaslighting and blame-shifting — always making you feel like the guilty one.", prompt:"How much of your confidence and personal identity have you lost since being with this person?"},
+  {id:76, cat:4, name:"GASLIGHTING", truth:"Reality twisted so expertly that you begin to question your own sanity.", dynamics:"Denying facts with a straight face until you doubt your own memory and perception.", prompt:"Trust your instincts. Trust the evidence. Do not let anyone rewrite your reality from the inside out."},
+  {id:77, cat:4, name:"FINANCIAL CONTROL", truth:"Controlling the wallet is controlling the escape route.", dynamics:"Managing all income and expenses — ensuring a partner remains financially dependent.", prompt:"Money equals freedom. Surrendering all financial control is surrendering your power to ever leave."},
+  {id:78, cat:4, name:"SILENT TREATMENT", truth:"Glacial silence is a weapon — and it is brutal psychological torture.", dynamics:"Deliberate stonewalling — treating a partner as if they literally do not exist after conflict.", prompt:"How many more times will you lower yourself to beg someone who uses silence as a punishment tool?"},
+  {id:79, cat:4, name:"LOVE BOMBING CYCLE", truth:"Drowning you in sweetness — then flipping the switch to icy withdrawal.", dynamics:"Overwhelming affection early on, cycling into coldness to keep you destabilized and hooked.", prompt:"Are you addicted to this person — or merely addicted to the high you feel during their brief 'good' phases?"},
+  {id:80, cat:4, name:"SURPRISE VISIT", truth:"Not showing up because they missed you — showing up to catch you.", dynamics:"Unannounced visits to home or office, designed to verify location and company.", prompt:"A relationship with no foundation of basic trust — how is it supposed to survive long-term?"},
+  {id:81, cat:4, name:"DIVORCE DECREE TRAP", truth:"Unsigned paperwork — used as an endless excuse to delay the inevitable.", dynamics:"Stalling on divorce documents, assets, or legal proceedings to prevent a clean break.", prompt:"Is the law genuinely complicated — or are you using those documents as cover for refusing to truly let go?"},
+  {id:82, cat:4, name:"JEALOUSY RUNNING WILD", truth:"Uncontrolled jealousy transforms love into a cage.", dynamics:"Monitoring every step, banning contact with the opposite sex, irrational outbursts.", prompt:"Jealousy doesn't prove deep love — it proves profound insecurity. The cage it builds traps both people inside."},
+  {id:83, cat:4, name:"THREATENING TO EXPOSE YOU", truth:"A secret held at your throat — used to force compliance.", dynamics:"Threats to reveal affairs, sexual preferences, or private scandals to family or workplace.", prompt:"If your truth must surface today — will you choose to face it with courage, or be blackmailed by it forever?"},
+  {id:84, cat:4, name:"CO-DEPENDENCY SINKING", truth:"Holding onto each other as you both go under.", dynamics:"Mutually addictive dynamic — so emotionally enmeshed that individual identity has dissolved.", prompt:"Are you staying because you 'love them' — or because you are more afraid of being alone?"},
+  {id:85, cat:4, name:"DIVIDING THE ASSETS", truth:"Cold war over property — right before the lightning strike of divorce.", dynamics:"Quietly gathering financial evidence and legal documents in preparation for the split.", prompt:"When love has curdled into a business negotiation, strategic clarity is the only thing protecting you now."},
+  {id:86, cat:4, name:"LIMITING YOUR FREEDOM", truth:"Cutting you off from the world so he can be your entire world.", dynamics:"Forbidden from seeing friends, barred from hobbies, isolated from family.", prompt:"Never let anyone clip your wings simply because they are afraid you will fly toward someone better."},
+  {id:87, cat:4, name:"UNFORGIVABLE WORDS SPOKEN", truth:"Venomous words once spoken are permanently etched into the soul.", dynamics:"Degrading, humiliating language hurled during arguments.", prompt:"Wounds from words sometimes take longer to heal than physical injuries. How much longer will you absorb this poison?"},
+  {id:88, cat:4, name:"USING EMOTIONAL TEARS", truth:"Squeezing out tears to flip the script and reclaim innocence.", dynamics:"Using crying and apparent vulnerability to deflect accountability when caught.", prompt:"Never let dramatic displays and manufactured tears obscure the facts and the truth of what happened."},
+  {id:89, cat:4, name:"THREATENING SELF-HARM", truth:"'If you leave me, I'll end it.' The cruelest hostage situation.", dynamics:"Using the threat of self-harm to prevent a partner from leaving.", prompt:"Remember: his life and safety are his responsibility alone — they are not your burden to carry."},
+  {id:90, cat:4, name:"RUNNING AWAY FROM REALITY", truth:"Turning away, going silent, vanishing — leaving you drowning in confusion.", dynamics:"Refusing to discuss problems, shutting down, disappearing when confrontation is needed.", prompt:"Someone who won't even turn to face a problem alongside you — do they truly deserve to walk your future path?"},
+];
+
+// ── DECK STATE ──
+let shuffledDeck = [...CARDS];
+let drawnIndex = 0;
+let currentCard = null;
+let currentView = 'deck';
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ── ACCESS CONTROL ──
+const VALID_CODE = 'DOOR2026';
+
+function checkCode() {
+  var rawInput = document.getElementById('code-input').value;
+  var input = rawInput.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (input === VALID_CODE) {
+    document.getElementById('access-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    initDeck();
+  } else {
+    var err = document.getElementById('error-msg');
+    err.style.display = 'block';
+    document.getElementById('code-input').style.borderColor = '#ff6b8a';
+    setTimeout(function() {
+      err.style.display = 'none';
+      document.getElementById('code-input').style.borderColor = '';
+    }, 3000);
+  }
+}
+
+// Keyboard enter support
+document.getElementById('code-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkCode();
+});
+
+// ── INIT ──
+function initDeck() {
+  shuffledDeck = shuffleArray([...CARDS]);
+  drawnIndex = 0;
+  updateCounter();
+  buildCategoryTabs();
+  buildAllCards(CARDS);
+  initSpread();
+}
+
+function updateCounter() {
+  const remaining = shuffledDeck.length - drawnIndex;
+  document.getElementById('counter').textContent = `${remaining} Cards`;
+}
+
+// ── VIEWS ──
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`nav-${view === 'deck' || view === 'card' ? 'deck' : view}`).classList.add('active');
+
+  document.getElementById('deck-view').style.display = 'none';
+  document.getElementById('card-view').style.display = 'none';
+  document.getElementById('all-cards-view').style.display = 'none';
+  document.getElementById('spread-view').style.display = 'none';
+
+  if (view === 'deck') {
+    document.getElementById('deck-view').style.display = 'flex';
+    document.getElementById('nav-deck').classList.add('active');
+  } else if (view === 'card') {
+    document.getElementById('card-view').style.display = 'flex';
+    document.getElementById('nav-deck').classList.add('active');
+  } else if (view === 'all') {
+    document.getElementById('all-cards-view').style.display = 'flex';
+  } else if (view === 'spread') {
+    document.getElementById('spread-view').style.display = 'flex';
+  }
+}
+
+function showDeck() { switchView('deck'); }
+
+// ── SHUFFLE ──
+function shuffleDeck() {
+  const pile = document.getElementById('deck-pile');
+  pile.classList.add('shuffling');
+  setTimeout(() => { pile.classList.remove('shuffling'); }, 1800);
+  shuffledDeck = shuffleArray([...CARDS]);
+  drawnIndex = 0;
+  updateCounter();
+}
+
+// ── DRAW ──
+function drawCard() {
+  if (drawnIndex >= shuffledDeck.length) {
+    shuffledDeck = shuffleArray([...CARDS]);
+    drawnIndex = 0;
+  }
+  currentCard = shuffledDeck[drawnIndex++];
+  updateCounter();
+
+  // Reset flip
+  const inner = document.getElementById('card-inner');
+  inner.classList.remove('flipped');
+
+  // Populate card face
+  renderCardFace(currentCard, document.getElementById('card-face'));
+
+  // Show count
+  document.getElementById('drawn-count').textContent = `Card ${drawnIndex} of ${CARDS.length}`;
+
+  switchView('card');
+}
+
+function renderCardFace(card, el) {
+  el.innerHTML = `
+    <div class="card-num">#${card.id} of 90</div>
+    <div class="card-category">${CATEGORIES[card.cat]}</div>
+    <div class="card-name">${card.name}</div>
+    <div class="card-section-label">🔴 The Raw Truth</div>
+    <div class="card-raw-truth">${card.truth}</div>
+    <div class="card-section-label">💔 The Dynamics</div>
+    <div class="card-dynamics">${card.dynamics}</div>
+    <div class="card-section-label">👁 Shadow Work Prompt</div>
+    <div class="card-prompt">${card.prompt}</div>
+    <div class="card-footer-brand">PsychicSoulStar · Behind Closed Doors Oracle</div>
+  `;
+}
+
+function flipCard() {
+  document.getElementById('card-inner').classList.toggle('flipped');
+}
+
+// ── ALL CARDS ──
+let activeCategory = 'all';
+
+function buildCategoryTabs() {
+  const container = document.getElementById('cat-tabs');
+  const allBtn = document.createElement('button');
+  allBtn.className = 'cat-tab active';
+  allBtn.textContent = 'All';
+  allBtn.onclick = () => filterByCategory('all', allBtn);
+  container.appendChild(allBtn);
+
+  CATEGORIES.forEach((name, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-tab';
+    const shortNames = ['💘 Love & Betrayal', '📱 Digital Deception', '🌙 Secret Lifestyles', '💜 Trauma & Pain', '🔗 Toxic Bonds'];
+    btn.textContent = shortNames[i];
+    btn.onclick = () => filterByCategory(i, btn);
+    container.appendChild(btn);
+  });
+}
+
+function filterByCategory(cat, btn) {
+  activeCategory = cat;
+  document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const term = document.getElementById('search-input').value;
+  filterCards(term);
+}
+
+function filterCards(term) {
+  if (term === undefined) term = document.getElementById('search-input').value;
+  const lower = term.toLowerCase();
+  const filtered = CARDS.filter(c => {
+    const matchCat = activeCategory === 'all' || c.cat === activeCategory;
+    const matchSearch = !lower || c.name.toLowerCase().includes(lower) ||
+      c.truth.toLowerCase().includes(lower) || c.prompt.toLowerCase().includes(lower);
+    return matchCat && matchSearch;
+  });
+  buildAllCards(filtered);
+}
+
+function buildAllCards(cards) {
+  const grid = document.getElementById('cards-grid');
+  grid.innerHTML = '';
+  cards.forEach(card => {
+    const el = document.createElement('div');
+    el.className = 'mini-card';
+    el.onclick = () => openCardFromList(card);
+    el.innerHTML = `
+      <div class="mini-card-num">#${card.id} · ${CATEGORIES[card.cat]}</div>
+      <div class="mini-card-name">${card.name}</div>
+      <div class="mini-card-truth">${card.truth}</div>
+    `;
+    grid.appendChild(el);
+  });
+}
+
+function openCardFromList(card) {
+  currentCard = card;
+  const inner = document.getElementById('card-inner');
+  inner.classList.remove('flipped');
+  renderCardFace(card, document.getElementById('card-face'));
+  document.getElementById('drawn-count').textContent = `Card #${card.id}`;
+  switchView('card');
+}
+
+// ── 3-CARD SPREAD ──
+const SPREAD_POSITIONS = ['Past — The Hidden Root', 'Present — Behind the Door', 'Future — What You Must Face'];
+let spreadCards = [];
+let spreadRevealed = [false, false, false];
+
+function initSpread() { newSpread(); }
+
+function newSpread() {
+  const pool = shuffleArray([...CARDS]);
+  spreadCards = pool.slice(0, 3);
+  spreadRevealed = [false, false, false];
+  renderSpread();
+}
+
+function renderSpread() {
+  const grid = document.getElementById('spread-grid');
+  grid.innerHTML = '';
+  spreadCards.forEach((card, i) => {
+    const slot = document.createElement('div');
+    if (spreadRevealed[i]) {
+      slot.className = 'spread-card-slot revealed';
+      slot.innerHTML = `
+        <div class="spread-slot-label">${SPREAD_POSITIONS[i]}</div>
+        <div class="spread-slot-name">${card.name}</div>
+        <div class="spread-slot-truth">${card.truth}</div>
+      `;
+    } else {
+      slot.className = 'spread-card-slot unrevealed';
+      slot.innerHTML = `<span class="spread-keyhole">🗝️</span>`;
+      slot.onclick = () => { spreadRevealed[i] = true; renderSpread(); };
+    }
+    grid.appendChild(slot);
+  });
+}
+
+</script>
+</body>
+</html>
