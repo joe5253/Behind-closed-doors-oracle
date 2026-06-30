@@ -329,6 +329,7 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    position: relative;
   }
 
   .card-back.has-image {
@@ -341,6 +342,11 @@
     height: 100%;
     display: block;
     object-fit: cover;
+  }
+
+  .card-back.has-image .keyhole-large,
+  .card-back.has-image .tap-hint {
+    display: none;
   }
 
   .card-back .keyhole-large {
@@ -937,24 +943,24 @@ const CATEGORIES = [
 const CARDS = [
   // Cat 1: Taboo Love & Betrayal (1-20)
   {id:1, cat:0, name:"MARRIED", truth:"Commitment existed before you arrived — someone is already bound.", dynamics:"One or both parties hold a legal tie to someone else.", prompt:"Are you deceiving yourself that this temporary arrangement will become permanent?"},
-  {id:2, cat:0, name:"REGRETTING THE CHOICE", truth:"You chose — but deep inside, you want to rewind time.", dynamics:"Longing for an ex or wondering if you chose the wrong person.", prompt:"What does your current partner lack that makes you reach for the past?"},
-  {id:3, cat:0, name:"GOT THE SIDECHICK PREGNANT", truth:"A secret has grown too large to contain.", dynamics:"An unexpected pregnancy complicates an already hidden affair.", prompt:"When forced to choose between 'responsibility' and 'love' — who do you protect?"},
-  {id:4, cat:0, name:"ONLY IN IT FOR THE MONEY", truth:"Love doesn't pay the bills — but money and comfort can buy everything else.", dynamics:"Staying together for financial security, not genuine desire.", prompt:"If the money and power disappeared tomorrow, would you still want to be here?"},
-  {id:5, cat:0, name:"IN LOVE WITH TWO PEOPLE", truth:"This isn't romance — it's inability to choose.", dynamics:"Your heart is split between two people, and you're keeping both.", prompt:"Is the fear of being alone what's making you hoard people as options?"},
-  {id:6, cat:0, name:"COWORKER", truth:"The office isn't just for income — it's become a place for risky business.", dynamics:"A secret affair blooms at work, tangled with professional stakes.", prompt:"Do you truly desire them — or are you addicted to the thrill of almost being caught?"},
-  {id:7, cat:0, name:"ONLY HERE FOR THE KIDS", truth:"The house is a stage where you play parent, not partner.", dynamics:"Love faded long ago; staying for the children or the image.", prompt:"Does staying in a loveless home truly serve the children — or is it just your excuse not to start over?"},
-  {id:8, cat:0, name:"SLEEPING THEIR WAY TO THE TOP", truth:"Using your body as a ladder, trading intimacy for advancement.", dynamics:"Sex or charm exchanged for position, rank, or money.", prompt:"Are you diminishing your actual abilities to chase a shortcut?"},
-  {id:9, cat:0, name:"CLOSE FRIEND", truth:"Your most dangerous enemy is the one who knows you best.", dynamics:"Betrayal emerges from within your inner circle.", prompt:"Were you ignoring the red flags because you trusted the label 'friend' too blindly?"},
-  {id:10, cat:0, name:"OPEN RELATIONSHIP", truth:"A polished excuse for infidelity with a contractual veneer.", dynamics:"One party pushed for opening the relationship to satisfy desire.", prompt:"Is this truly mutual fulfillment — or did you agree because you feared losing them?"},
-  {id:11, cat:0, name:"KARMIC RELATIONSHIP", truth:"Looping through familiar hell, addicted to the very pain.", dynamics:"A toxic push-pull cycle — explosive fights followed by magnetic reunions.", prompt:"What old wound makes you believe that suffering equals real love?"},
-  {id:12, cat:0, name:"REBOUND RELATIONSHIP", truth:"You are being used as painkillers — not a permanent cure.", dynamics:"Dating immediately after a breakup to numb loneliness or provoke an ex.", prompt:"Are you using this new person as emotional medicine without considering their feelings?"},
-  {id:13, cat:0, name:"SECRET SECOND FAMILY", truth:"Two solid foundations built in silence and shadow.", dynamics:"A hidden family, home, or children concealed from the first.", prompt:"How vast is your greed if you believe you can carry two full lives simultaneously?"},
-  {id:14, cat:0, name:"WEDDING RING HIDDEN", truth:"Pocketing the ring to play the role of single.", dynamics:"Deliberately hiding marital status when someone new catches your eye.", prompt:"Is a fleeting thrill worth the total destruction of a lifetime of built trust?"},
-  {id:15, cat:0, name:"COMPARING YOU TO THE EX", truth:"You are just a shadow of someone they can never reclaim.", dynamics:"Constantly compared in behavior, looks, or personality to a past lover.", prompt:"You're erasing your own worth to mirror someone else — is it truly worth it?"},
-  {id:16, cat:0, name:"FORBIDDEN ATTRACTION", truth:"The more it's forbidden, the more magnetic it feels.", dynamics:"Desire for someone you absolutely should not pursue.", prompt:"Are you addicted to love — or to the adrenaline rush of breaking the rules?"},
-  {id:17, cat:0, name:"PROMISE RING LIES", truth:"Promises spoken to buy time, not to build a future.", dynamics:"Vows of commitment made with no intention of follow-through.", prompt:"How many more months will you let empty words hold you hostage in a waiting room?"},
-  {id:18, cat:0, name:"STILL LYING IN THEIR BED", truth:"Lips say it's over — the body never got the memo.", dynamics:"Broken up, yet physically still behaving as a couple.", prompt:"Is your physical entanglement blocking the door to a healthier new beginning?"},
-  {id:19, cat:0, name:"EMOTIONAL AFFAIR", truth:"The body is here — but the mind and soul left for someone else.", dynamics:"Deep emotional intimacy formed with another, without physical contact.", prompt:"Emotional infidelity sometimes cuts deeper than physical betrayal. You already know this, don't you?"},
+  {id:2, cat:0, name:"GOT THE SIDECHICK PREGNANT", truth:"A secret has grown too large to contain.", dynamics:"An unexpected pregnancy complicates an already hidden affair.", prompt:"When forced to choose between 'responsibility' and 'love' — who do you protect?"},
+  {id:3, cat:0, name:"ONLY IN IT FOR THE MONEY", truth:"Love doesn't pay the bills — but money and comfort can buy everything else.", dynamics:"Staying together for financial security, not genuine desire.", prompt:"If the money and power disappeared tomorrow, would you still want to be here?"},
+  {id:4, cat:0, name:"IN LOVE WITH TWO PEOPLE", truth:"This isn't romance — it's inability to choose.", dynamics:"Your heart is split between two people, and you're keeping both.", prompt:"Is the fear of being alone what's making you hoard people as options?"},
+  {id:5, cat:0, name:"COWORKER", truth:"The office isn't just for income — it's become a place for risky business.", dynamics:"A secret affair blooms at work, tangled with professional stakes.", prompt:"Do you truly desire them — or are you addicted to the thrill of almost being caught?"},
+  {id:6, cat:0, name:"ONLY HERE FOR THE KIDS", truth:"The house is a stage where you play parent, not partner.", dynamics:"Love faded long ago; staying for the children or the image.", prompt:"Does staying in a loveless home truly serve the children — or is it just your excuse not to start over?"},
+  {id:7, cat:0, name:"SLEEPING THEIR WAY TO THE TOP", truth:"Using your body as a ladder, trading intimacy for advancement.", dynamics:"Sex or charm exchanged for position, rank, or money.", prompt:"Are you diminishing your actual abilities to chase a shortcut?"},
+  {id:8, cat:0, name:"CLOSE FRIEND", truth:"Your most dangerous enemy is the one who knows you best.", dynamics:"Betrayal emerges from within your inner circle.", prompt:"Were you ignoring the red flags because you trusted the label 'friend' too blindly?"},
+  {id:9, cat:0, name:"OPEN RELATIONSHIP", truth:"A polished excuse for infidelity with a contractual veneer.", dynamics:"One party pushed for opening the relationship to satisfy desire.", prompt:"Is this truly mutual fulfillment — or did you agree because you feared losing them?"},
+  {id:10, cat:0, name:"KARMIC RELATIONSHIP", truth:"Looping through familiar hell, addicted to the very pain.", dynamics:"A toxic push-pull cycle — explosive fights followed by magnetic reunions.", prompt:"What old wound makes you believe that suffering equals real love?"},
+  {id:11, cat:0, name:"REBOUND RELATIONSHIP", truth:"You are being used as painkillers — not a permanent cure.", dynamics:"Dating immediately after a breakup to numb loneliness or provoke an ex.", prompt:"Are you using this new person as emotional medicine without considering their feelings?"},
+  {id:12, cat:0, name:"SECRET SECOND FAMILY", truth:"Two solid foundations built in silence and shadow.", dynamics:"A hidden family, home, or children concealed from the first.", prompt:"How vast is your greed if you believe you can carry two full lives simultaneously?"},
+  {id:13, cat:0, name:"WEDDING RING HIDDEN", truth:"Pocketing the ring to play the role of single.", dynamics:"Deliberately hiding marital status when someone new catches your eye.", prompt:"Is a fleeting thrill worth the total destruction of a lifetime of built trust?"},
+  {id:14, cat:0, name:"COMPARING YOU TO THE EX", truth:"You are just a shadow of someone they can never reclaim.", dynamics:"Constantly compared in behavior, looks, or personality to a past lover.", prompt:"You're erasing your own worth to mirror someone else — is it truly worth it?"},
+  {id:15, cat:0, name:"FORBIDDEN ATTRACTION", truth:"The more it's forbidden, the more magnetic it feels.", dynamics:"Desire for someone you absolutely should not pursue.", prompt:"Are you addicted to love — or to the adrenaline rush of breaking the rules?"},
+  {id:16, cat:0, name:"PROMISE RING LIES", truth:"Promises spoken to buy time, not to build a future.", dynamics:"Vows of commitment made with no intention of follow-through.", prompt:"How many more months will you let empty words hold you hostage in a waiting room?"},
+  {id:17, cat:0, name:"STILL LYING IN THEIR BED", truth:"Lips say it's over — the body never got the memo.", dynamics:"Broken up, yet physically still behaving as a couple.", prompt:"Is your physical entanglement blocking the door to a healthier new beginning?"},
+  {id:18, cat:0, name:"EMOTIONAL AFFAIR", truth:"The body is here — but the mind and soul left for someone else.", dynamics:"Deep emotional intimacy formed with another, without physical contact.", prompt:"Emotional infidelity sometimes cuts deeper than physical betrayal. You already know this, don't you?"},
+  {id:19, cat:0, name:"REGRETTING THE CHOICE", truth:"You chose — but deep inside, you want to rewind time.", dynamics:"Longing for an ex or wondering if you chose the wrong person.", prompt:"What does your current partner lack that makes you reach for the past?"},
   {id:20, cat:0, name:"UNPLANNED PREGNANCY", truth:"It arrived at the wrong time, turning a situation into a crisis.", dynamics:"A pregnancy emerging when the relationship was already fragile or complicated.", prompt:"This has come to force you to stop running from the truth and make a definitive choice."},
 
   // Cat 2: Tech, Deception & Secrecy (21-40)
